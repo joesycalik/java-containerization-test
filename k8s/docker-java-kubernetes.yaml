@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-java-demo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: server
+  template:
+    metadata:
+      labels:
+        service: server
+    spec:
+      containers:
+        - name: server-service
+          image: joesycalik/java-containerization-test
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: postgres
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://demo-db:5432/petclinic
+---
+#NodePort doesn't appear to be working. Able to get around this via kubectl port-forward svc/service-entrypoint 8080:8080
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    service: server
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30001

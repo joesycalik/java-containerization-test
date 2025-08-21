@@ -10,10 +10,11 @@ stringData:
   host: "demo-db"
   port: "5432"
   database: "petclinic"
-  username: "user"
-  password: "pass"
+  username: "petclinic"
+  password: "petclinic"
 
 ---
+# Pod crashes without the DB running
 apiVersion: v1
 kind: Service
 metadata:
